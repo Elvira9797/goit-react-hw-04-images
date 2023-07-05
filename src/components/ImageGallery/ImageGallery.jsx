@@ -15,21 +15,21 @@ const ImageGallery = ({ openModal, namePicture }) => {
   const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
-    if (namePicture === '') return;
-    fetchData(namePicture, 1);
-  }, [namePicture]);
+    const fetchData = async () => {
+      if (namePicture === '') return;
+      try {
+        setIsLoading(true);
+        setShowButton(false);
+        setPage(1);
+        const data = await getImages(namePicture, 1);
+        handleImageData(data);
+      } catch (error) {
+        handleError();
+      }
+    };
 
-  const fetchData = async (name, pageNum) => {
-    try {
-      setIsLoading(true);
-      setShowButton(false);
-      setPage(1);
-      const data = await getImages(name, pageNum);
-      handleImageData(data);
-    } catch (error) {
-      handleError();
-    }
-  };
+    fetchData();
+  }, [namePicture]);
 
   const loadMoreImages = async () => {
     setIsLoading(true);
