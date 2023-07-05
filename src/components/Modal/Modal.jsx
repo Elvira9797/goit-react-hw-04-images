@@ -1,19 +1,17 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { Overlay, StyledModal } from './Modal.styled';
 import { AnimatePresence } from 'framer-motion';
 
-const modalRoot = document.querySelector('#modal-root');
-
 const Modal = ({ closeModal, children }) => {
-  function handleKeyDown(event) {
-    if (event.code === 'Escape') {
-      closeModal();
-    }
-  }
-
   useEffect(() => {
+    const handleKeyDown = event => {
+      if (event.code === 'Escape') {
+        closeModal();
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
 
@@ -21,13 +19,15 @@ const Modal = ({ closeModal, children }) => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'auto';
     };
-  }, [handleKeyDown]);
+  }, [closeModal]);
 
   const handleBackdropClick = event => {
     if (event.target === event.currentTarget) {
       closeModal();
     }
   };
+
+  const modalRoot = document.querySelector('#modal-root');
 
   return createPortal(
     <AnimatePresence>
