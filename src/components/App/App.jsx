@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Searchbar from 'components/Searchbar';
@@ -6,56 +6,45 @@ import ImageGallery from 'components/ImageGallery';
 import Modal from 'components/Modal';
 import { ModalImg } from '../Modal/Modal.styled';
 
-class App extends Component {
-  state = {
-    searchValue: '',
-    modal: {
+const App = () => {
+  const [searchValue, setSearchValue] = useState('');
+  const [modal, setModal] = useState({
+    isOpen: false,
+    visibleData: null,
+  });
+
+  const addNamePicture = namePicture => {
+    setSearchValue(namePicture);
+  };
+
+  const onOpenModal = data => {
+    setModal({
+      isOpen: true,
+      visibleData: data,
+    });
+  };
+
+  const onCloseModal = () => {
+    setModal({
       isOpen: false,
       visibleData: null,
-    },
-  };
-
-  addNamePicture = namePicture => {
-    this.setState({ searchValue: namePicture });
-  };
-
-  onOpenModal = data => {
-    this.setState({
-      modal: {
-        isOpen: true,
-        visibleData: data,
-      },
     });
   };
 
-  onCloseModal = () => {
-    this.setState({
-      modal: {
-        isOpen: false,
-        visibleData: null,
-      },
-    });
-  };
+  const { isOpen, visibleData } = modal;
 
-  render() {
-    const {
-      searchValue,
-      modal: { isOpen, visibleData },
-    } = this.state;
-
-    return (
-      <div>
-        <Searchbar onSubmit={this.addNamePicture} />
-        <ImageGallery namePicture={searchValue} openModal={this.onOpenModal} />
-        {isOpen && (
-          <Modal closeModal={this.onCloseModal}>
-            <ModalImg src={visibleData.largeImageURL} alt={visibleData.tags} />
-          </Modal>
-        )}
-        <ToastContainer autoClose={3000} theme="colored" />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Searchbar onSubmit={addNamePicture} />
+      <ImageGallery namePicture={searchValue} openModal={onOpenModal} />
+      {isOpen && (
+        <Modal closeModal={onCloseModal}>
+          <ModalImg src={visibleData.largeImageURL} alt={visibleData.tags} />
+        </Modal>
+      )}
+      <ToastContainer autoClose={3000} theme="colored" />
+    </div>
+  );
+};
 
 export default App;
