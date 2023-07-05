@@ -7,6 +7,12 @@ import { AnimatePresence } from 'framer-motion';
 const modalRoot = document.querySelector('#modal-root');
 
 const Modal = ({ closeModal, children }) => {
+  function handleKeyDown(event) {
+    if (event.code === 'Escape') {
+      closeModal();
+    }
+  }
+
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
@@ -15,13 +21,7 @@ const Modal = ({ closeModal, children }) => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'auto';
     };
-  }, []);
-
-  const handleKeyDown = event => {
-    if (event.code === 'Escape') {
-      closeModal();
-    }
-  };
+  }, [handleKeyDown]);
 
   const handleBackdropClick = event => {
     if (event.target === event.currentTarget) {
